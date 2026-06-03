@@ -53,34 +53,37 @@ El código fuente sigue una estructura limpia y modular:
 
 ```text
 basketball-portfolio/
-├── public/                 # Recursos públicos (iconos, imágenes)
-├── src/
-│   ├── assets/             # Estilos y recursos multimedia
-│   ├── components/         # Componentes React
-│   │   ├── About.jsx       # Sección sobre mí ("Court Vision")
-│   │   ├── Contact.jsx     # Información de contacto ("Final Shot")
-│   │   ├── Hero.jsx        # Player card principal
-│   │   ├── Navbar.jsx      # Barra de navegación
-│   │   ├── ProjectCard.jsx # Tarjeta de proyecto
-│   │   ├── Projects.jsx    # Grid de proyectos destacados
-│   │   ├── StackDecision.jsx # Explicación de arquitectura
-│   │   └── TechStack.jsx   # Alineación de posiciones tecnológicas
-│   ├── data/
-│   │   └── projects.js     # Datos estructurados de los proyectos
-│   ├── App.jsx             # Componente raíz
-│   ├── App.css             # Estilos globales y layouts
-│   ├── index.css           # Estilos base y variables de diseño
-│   └── main.jsx            # Punto de entrada de React
+├── .dockerignore           # Archivos y carpetas excluidos del contexto de Docker
+├── Dockerfile              # Configuración de construcción de Docker (multi-stage)
+├── nginx.conf              # Configuración personalizada de Nginx para producción
 ├── index.html              # HTML base
-├── package.json            # Configuración y dependencias
-└── vite.config.js          # Configuración del empaquetador Vite
+├── package.json            # Configuración de Node y dependencias del proyecto
+├── vite.config.js          # Configuración del empaquetador Vite
+├── public/                 # Recursos públicos (iconos, imágenes)
+└── src/
+    ├── assets/             # Estilos y recursos multimedia
+    ├── components/         # Componentes React
+    │   ├── About.jsx       # Sección sobre mí ("Court Vision")
+    │   ├── Contact.jsx     # Información de contacto ("Final Shot")
+    │   ├── Hero.jsx        # Player card principal (tarjeta de jugador)
+    │   ├── Navbar.jsx      # Barra de navegación
+    │   ├── ProjectCard.jsx # Tarjeta de proyecto individual
+    │   ├── Projects.jsx    # Grid de proyectos destacados
+    │   ├── StackDecision.jsx # Explicación de arquitectura ("Game Plan")
+    │   └── TechStack.jsx   # Alineación de posiciones tecnológicas
+    ├── data/
+    │   └── projects.js     # Datos estructurados de los proyectos
+    ├── App.jsx             # Componente raíz de React
+    ├── App.css             # Estilos de layouts y componentes
+    ├── index.css           # Estilos base y variables CSS globales
+    └── main.jsx            # Punto de entrada de React
 ```
 
 ---
 
 ## 🚀 Instalación y Ejecución Local
 
-Para levantar este proyecto localmente, sigue estos pasos:
+Para levantar este proyecto localmente de forma tradicional, sigue estos pasos:
 
 1. **Clonar el repositorio:**
    ```bash
@@ -103,6 +106,37 @@ Para levantar este proyecto localmente, sigue estos pasos:
 4. **Construir para producción:**
    ```bash
    npm run build
+   ```
+
+---
+
+## 🐳 Ejecución con Docker
+
+El proyecto está configurado para ejecutarse en contenedores Docker mediante una construcción multi-etapa (*multi-stage*):
+1. **Etapa de Compilación:** Utiliza `node:20-alpine` para instalar dependencias de desarrollo y compilar la aplicación React optimizada (`npm run build`).
+2. **Etapa de Producción:** Utiliza `nginx:alpine` para servir la carpeta compilada (`/app/dist`) y aplica una configuración personalizada en `nginx.conf` para redireccionar rutas al `index.html` (necesario para SPA).
+
+Para construir y levantar el contenedor en tu máquina:
+
+1. **Construir la imagen de Docker:**
+   ```bash
+   docker build -t basketball-portfolio .
+   ```
+
+2. **Ejecutar el contenedor:**
+   ```bash
+   docker run -d -p 8080:80 --name portfolio-app basketball-portfolio
+   ```
+   *Esto mapea el puerto `80` del contenedor al puerto `8080` local. Accede a través de [http://localhost:8080](http://localhost:8080).*
+
+3. **Detener el contenedor:**
+   ```bash
+   docker stop portfolio-app
+   ```
+
+4. **Eliminar el contenedor:**
+   ```bash
+   docker rm portfolio-app
    ```
 
 ---

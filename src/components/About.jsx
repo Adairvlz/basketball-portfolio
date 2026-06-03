@@ -14,7 +14,7 @@ function About() {
                 </p>
 
                 <p>
-                    He trabajado proyectos usando React, Vite, Laravel, PostgreSQL,
+                    He trabajado proyectos usando React, Python, FastAPI, Vite, Laravel, PostgreSQL,
                     Docker y GitHub. Mi enfoque es aprender construyendo, documentar bien
                     mis proyectos y tomar decisiones técnicas que tengan sentido según el
                     problema.
